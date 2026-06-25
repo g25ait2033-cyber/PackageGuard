@@ -34,10 +34,9 @@ independent signals, so a freshly-published squat with no history is still flagg
 4. [Setup](#setup)
 5. [Running the demos](#running-the-demos)
 6. [Configuration reference](#configuration-reference)
-7. [Testing](#testing)
-8. [Reproducing the benchmarks](#reproducing-the-benchmarks)
-9. [Future work](#future-work)
-10. [Ethics](#ethics)
+7. [Reproducing the benchmarks](#reproducing-the-benchmarks)
+8. [Future work](#future-work)
+9. [Ethics](#ethics)
 
 ---
 
@@ -340,22 +339,6 @@ All configuration is via environment variables (or `.env`).
 
 For a `cloud` upstream, also set `PACKAGEGUARD_UPSTREAM_BASE_URL` and
 `PACKAGEGUARD_UPSTREAM_API_KEY` (any OpenAI-compatible provider works unchanged).
-
----
-
-## Testing
-
-If the `tests/` folder is included, run the unit tests (mocked — no network or LLM):
-
-```cmd
-pytest -q
-```
-
-Integration tests that hit the real network/LLM are opt-in:
-
-```cmd
-pytest -m integration -v
-```
 
 ---
 
