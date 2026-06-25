@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# venv
+.venv/
+venv/
+env/
+
+# secrets
+.env
+
+# runtime data
+.cache/
+bench/results/
+*.log
+
+# scratch
+paper_text.txt
+
+# large media / external assets (hosted on Drive — see ASSETS.md)
+*.mp4
+*.mov
+usenixsecurity25-spracklen.pdf
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# build artefacts
+build/
+dist/
+*.egg-info/

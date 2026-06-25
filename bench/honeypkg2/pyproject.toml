@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# ---------------------------------------------------------------------------
+# HONEY PACKAGE #2 — research artifact for the PackageGuard project.
+#
+# Same purpose as bench/honeypkg/, but this one ALSO advertises a GitHub
+# repository. It models a *more determined* slopsquatting attacker who not only
+# publishes the hallucinated package to a live index but also spins up a repo to
+# make it look legitimate. The point of the experiment is:
+#
+#   even with a backing repo, a FRESHLY-created repo (0 stars, days old) carries
+#   almost no trust — so the PackageGuard engine still returns BLOCK/WARN. The
+#   repo signal goes UP slightly versus honeypkg #1, but existence + a brand-new
+#   repo is still not trust.
+#
+# Published to TestPyPI ONLY (https://test.pypi.org), never the real PyPI.
+# Completely harmless: no install hooks; does nothing on import except print a
+# research notice.
+#
+# >>> BEFORE UPLOADING:
+#   1. (optional) change `name` to the hallucinated package you want to demo,
+#      and rename src/canon_edsdk/ to match (use underscores in the folder name).
+#   2. Create a fresh empty public GitHub repo named `canon-edsdk` under your
+#      account so the repo collector can resolve the URLs below (rename your
+#      existing repo, or update the URLs to a new one). Keep the package on
+#      TestPyPI ONLY.
+#
+# NOTE: the name must NOT exist on real PyPI (verify with a 404 on
+# https://pypi.org/pypi/<name>/json). `canon-edsdk` is a genuine LLM
+# hallucination from our dataset and returns 404 on real PyPI.
+# ---------------------------------------------------------------------------
+[project]
+name = "canon-edsdk"
+version = "0.0.1"
+description = "Research honey-package (TestPyPI only) for the PackageGuard slopsquatting study. Harmless. Models an attacker that also publishes a GitHub repo."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "PackageGuard research", email = "packageguard.research@example.com" }]
+keywords = ["research", "security", "package-hallucination", "do-not-use"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Science/Research",
+    "Topic :: Security",
+]
+
+[project.urls]
+Homepage = "https://github.com/g25ait2033-cyber/canon-edsdk"
+Source = "https://github.com/g25ait2033-cyber/canon-edsdk"
+
+[tool.setuptools]
+packages = ["canon_edsdk"]
+package-dir = { "" = "src" }

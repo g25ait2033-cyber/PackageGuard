@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# ---------------------------------------------------------------------------
+# HONEY PACKAGE — research artifact for the PackageGuard project.
+#
+# This package is published to TestPyPI ONLY (https://test.pypi.org), never to
+# the real Python Package Index. Its name is deliberately one of the package
+# names that LLMs hallucinate (slopsquatting). The point of the experiment is:
+#
+#   a freshly-published package GENUINELY EXISTS on a live index, yet the
+#   PackageGuard trust engine still returns BLOCK — because the other signals
+#   (minutes-old account, zero downloads, no real repo, no real-world usage,
+#   install-time code scan) overwhelm the bare "it exists" signal.
+#
+# It is completely harmless: it ships no install hooks and does nothing on
+# import except print a research notice.
+#
+# >>> Before uploading, change `name` to the hallucinated package you want to
+#     demonstrate (e.g. pybloomberg, rtlsdr, hue-control). Keep it on TestPyPI.
+# ---------------------------------------------------------------------------
+[project]
+name = "pybloomberg"
+version = "0.0.1"
+description = "Research honey-package (TestPyPI only) for the PackageGuard slopsquatting study. Harmless."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "PackageGuard research" }]
+keywords = ["research", "security", "package-hallucination", "do-not-use"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Science/Research",
+    "Topic :: Security",
+]
+
+[tool.setuptools]
+packages = ["pybloomberg"]
+package-dir = { "" = "src" }

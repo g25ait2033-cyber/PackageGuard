@@ -1,0 +1,18 @@
+[
+  "requests", "urllib3", "numpy", "pandas", "boto3", "botocore",
+  "setuptools", "six", "python-dateutil", "pyyaml", "certifi",
+  "charset-normalizer", "idna", "typing-extensions", "packaging",
+  "click", "jinja2", "markupsafe", "wheel", "pip",
+  "cryptography", "cffi", "pycparser", "rsa", "pyasn1", "pyjwt",
+  "flask", "django", "fastapi", "starlette", "uvicorn", "gunicorn",
+  "sqlalchemy", "alembic", "psycopg2", "pymysql", "redis", "pymongo",
+  "pytest", "pytest-cov", "tox", "coverage", "mock", "nose",
+  "scipy", "scikit-learn", "matplotlib", "seaborn", "plotly",
+  "tensorflow", "torch", "transformers", "openai", "anthropic",
+  "tqdm", "rich", "loguru", "pydantic", "typer",
+  "beautifulsoup4", "lxml", "selenium", "scrapy", "httpx", "aiohttp",
+  "pillow", "opencv-python", "imageio",
+  "google-api-python-client", "google-cloud-storage", "azure-storage-blob",
+  "celery", "kombu", "amqp",
+  "python-dotenv", "pyparsing", "attrs", "more-itertools"
+]
