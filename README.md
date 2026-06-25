@@ -23,6 +23,9 @@ independent signals, so a freshly-published squat with no history is still flagg
 
 > **Demo video & source paper:** see [ASSETS.md](ASSETS.md) (the ~154 MB walkthrough
 > video is hosted on Google Drive, not in this repo).
+>
+> **Architecture at a glance:** open [docs/packageguard_workflow.html](docs/packageguard_workflow.html)
+> in any browser for a one-page visual of the end-to-end workflow.
 
 ---
 
@@ -84,6 +87,9 @@ independent signals, so a freshly-published squat with no history is still flagg
 │   ├── honeypkg/              #   honey package #1: pybloomberg (TestPyPI only)
 │   ├── honeypkg2/             #   honey package #2: canon-edsdk, a "clean stub" (TestPyPI only)
 │   └── results/               #   CSVs, JSON reports, plots
+│
+├── docs/                      # visual workflow diagram (open the .html in a browser)
+│   └── packageguard_workflow.html
 │
 ├── requirements.txt
 ├── .env.example               # copy to .env and fill in

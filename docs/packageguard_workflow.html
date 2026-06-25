@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PackageGuard — Workflow Architecture</title>
+<style>
+  :root{
+    --teal:#2a9d8f; --blue:#2667b0; --orange:#c1571f; --green:#2f8f4e;
+    --purple:#6a4c93; --gold:#e9a23b; --red:#c0392b;
+    --ink:#1f2a37; --muted:#5b6675; --line:#d7dde5; --bg:#f4f6f9; --panel:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .sheet{width:1200px; margin:0 auto; padding:26px 26px 36px;}
+  h1{font-size:34px; text-align:center; margin:6px 0 2px; color:#172033; letter-spacing:.3px;}
+  .sub{text-align:center; font-style:italic; color:var(--muted); margin:0 0 20px; font-size:16px;}
+  .strip{display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:22px;}
+  .step{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 12px 12px 12px; position:relative; box-shadow:0 1px 2px rgba(0,0,0,.04);}
+  .step .n{display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; color:#fff; font-weight:700; font-size:13px; margin-right:6px;}
+  .step h3{font-size:14px; margin:0 0 6px; display:flex; align-items:center;}
+  .step p{margin:0; font-size:11.5px; color:var(--muted); line-height:1.35;}
+  .arrowrow{display:flex; align-items:center;}
+  .row{display:grid; grid-template-columns:repeat(6,1fr); gap:10px; align-items:stretch;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); display:flex; flex-direction:column;}
+  .card .hd{padding:10px 12px; color:#fff; font-weight:700; font-size:13.5px; display:flex; align-items:center; gap:7px;}
+  .card .bd{padding:11px 12px; font-size:11.5px; color:var(--ink); line-height:1.4; flex:1;}
+  .card .bd ul{margin:0; padding-left:15px;}
+  .card .bd li{margin:3px 0;}
+  .badge{display:inline-flex; align-items:center; justify-content:center; width:20px;height:20px;border-radius:50%; background:rgba(255,255,255,.25); font-size:12px; font-weight:700;}
+  .footer-tag{margin-top:8px; font-size:10.5px; color:var(--muted); border-top:1px dashed var(--line); padding-top:6px;}
+  .lane{border-radius:7px; padding:6px 9px; margin:5px 0; font-size:11px; color:#1f2a37; border:1px solid; display:flex; justify-content:space-between; gap:6px;}
+  .lane b{font-weight:700;}
+  .lane .w{font-variant-numeric:tabular-nums; color:#445; font-size:10.5px; white-space:nowrap;}
+  .sec-title{margin:24px 0 10px; font-size:13px; font-weight:800; letter-spacing:1px; color:var(--muted); text-align:center; text-transform:uppercase;}
+  .exec{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .tier{border:1px solid var(--line); border-radius:12px; background:var(--panel); overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05);}
+  .tier .th{padding:11px 14px; color:#fff; font-weight:800; font-size:15px; display:flex; align-items:center; gap:8px;}
+  .tier .tb{padding:12px 14px; font-size:12px; line-height:1.45;}
+  .pill{display:inline-block; border-radius:20px; padding:3px 10px; font-size:11px; font-weight:700; color:#fff; margin:2px 4px 2px 0;}
+  .flow{display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:11.5px; color:var(--muted); margin-top:8px;}
+  .chip{background:#eef2f7; border:1px solid var(--line); border-radius:6px; padding:3px 8px; font-size:11px; color:var(--ink);}
+  .legend{display:grid; grid-template-columns:1.1fr 1fr; gap:14px; margin-top:22px;}
+  .lbox{border:1px solid var(--line); border-radius:12px; background:var(--panel); padding:12px 14px;}
+  .lbox h4{margin:0 0 9px; font-size:12px; letter-spacing:.6px; text-transform:uppercase; color:var(--muted);}
+  .verds{display:flex; gap:10px; flex-wrap:wrap;}
+  .verd{flex:1; min-width:150px; border-radius:9px; padding:9px 11px; color:#fff;}
+  .verd b{display:block; font-size:14px;}
+  .verd span{font-size:10.5px; opacity:.95;}
+  .defeat{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; font-size:11px;}
+  .defeat div{background:#eef2f7; border:1px solid var(--line); border-radius:8px; padding:8px 9px; color:var(--ink); line-height:1.35;}
+  .takeaway{margin-top:20px; background:#fff7e6; border:1px solid #f0d28a; border-radius:12px; padding:13px 16px; font-size:13px; display:flex; gap:10px; align-items:flex-start;}
+  .takeaway .star{color:var(--gold); font-size:22px; line-height:1;}
+  .arrow{color:var(--muted); font-weight:700; font-size:18px; text-align:center;}
+  .small{font-size:10.5px; color:var(--muted);}
+  .bg-teal{background:var(--teal);} .bg-blue{background:var(--blue);} .bg-orange{background:var(--orange);}
+  .bg-green{background:var(--green);} .bg-purple{background:var(--purple);} .bg-gold{background:var(--gold);} .bg-red{background:var(--red);}
+  .bd-teal{border-color:var(--teal);} .bd-blue{border-color:var(--blue);} .bd-orange{border-color:var(--orange);}
+  .bd-green{border-color:var(--green);} .bd-purple{border-color:var(--purple);} .bd-red{border-color:var(--red);}
+  .l-teal{background:#e7f5f3;} .l-blue{background:#e8f0fa;} .l-orange{background:#fbeee5;}
+  .l-green{background:#e8f4ec;} .l-purple{background:#efeaf5;} .l-red{background:#fbe9e7;}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <h1>PackageGuard</h1>
+  <p class="sub">A Two-Tier, Post-Generation Defense Against LLM Package Hallucinations (“Slopsquatting”)</p>
+
+  <!-- TOP PIPELINE STRIP -->
+  <div class="strip">
+    <div class="step"><h3><span class="n bg-teal">1</span>Intercept</h3><p>Capture LLM output or a <code>pip install</code> request before any code runs.</p></div>
+    <div class="step"><h3><span class="n bg-blue">2</span>Extract Names</h3><p>Pull package names from pip lines, imports &amp; prose; map import→dist.</p></div>
+    <div class="step"><h3><span class="n bg-orange">3</span>Trust Engine</h3><p>8 independent collectors gather live evidence for every package.</p></div>
+    <div class="step"><h3><span class="n bg-purple">4</span>Score &amp; Verdict</h3><p>Weighted average → PASS / WARN / BLOCK; non-existent = hard BLOCK.</p></div>
+    <div class="step"><h3><span class="n bg-green">5</span>Enforce Policy</h3><p>Tier 1 annotate/block/refine · Tier 2 proceed/prompt/refuse.</p></div>
+    <div class="step"><h3><span class="n bg-gold">6</span>Safe Output</h3><p>Trustworthy answer, or a blocked install — supply chain protected.</p></div>
+  </div>
+
+  <!-- MAIN DETAILED ROW -->
+  <div class="row">
+    <!-- 1 -->
+    <div class="card">
+      <div class="hd bg-teal"><span class="badge">1</span>Intercept</div>
+      <div class="bd">
+        <b>Two entry points:</b>
+        <ul>
+          <li><b>Tier 1</b> — OpenAI-compatible proxy in front of the LLM</li>
+          <li><b>Tier 2</b> — <code>safeinstall</code> CLI wrapping <code>pip</code></li>
+        </ul>
+        <div class="footer-tag">Post-generation: acts on what the model actually said.</div>
+      </div>
+    </div>
+    <!-- 2 -->
+    <div class="card">
+      <div class="hd bg-blue"><span class="badge">2</span>Extract Names</div>
+      <div class="bd">
+        <ul>
+          <li>Parse <code>pip install</code> lines (verbatim)</li>
+          <li>Parse <code>import</code> statements</li>
+          <li>Scan prose for package mentions</li>
+          <li>Filter stdlib + stopwords; PEP-503 normalise</li>
+          <li>import→dist aliases (e.g. <code>paho→paho-mqtt</code>)</li>
+        </ul>
+      </div>
+    </div>
+    <!-- 3 : 8 collectors as lanes -->
+    <div class="card" style="grid-column:span 2;">
+      <div class="hd bg-orange"><span class="badge">3</span>Trust Engine — 8 Collectors (live signals)</div>
+      <div class="bd">
+        <div class="lane l-blue bd-blue"><span><b>registry</b> · PyPI existence, age, releases, URLs</span><span class="w">w 3.0 ★primary</span></div>
+        <div class="lane l-red bd-red"><span><b>installscan</b> · static setup.py scan (never executes)</span><span class="w">w 2.5 ⚠ veto</span></div>
+        <div class="lane l-orange bd-orange"><span><b>osv</b> · open (unpatched) vulnerabilities</span><span class="w">w 2.0→4.0 ⚠ veto</span></div>
+        <div class="lane l-green bd-green"><span><b>repo</b> · GitHub stars, age, archived</span><span class="w">w 2.0</span></div>
+        <div class="lane l-purple bd-purple"><span><b>codesearch</b> · real-world <code>import</code> usage</span><span class="w">w 2.0</span></div>
+        <div class="lane l-teal bd-teal"><span><b>maintainer</b> · author footprint</span><span class="w">w 1.5</span></div>
+        <div class="lane l-teal bd-teal"><span><b>nameanalysis</b> · Levenshtein + heuristics (offline)</span><span class="w">w 1.0</span></div>
+        <div class="lane l-purple bd-purple"><span><b>selfcheck</b> · ask the LLM “is X real?” (opt-in)</span><span class="w">w 1.5</span></div>
+      </div>
+    </div>
+    <!-- 4 -->
+    <div class="card">
+      <div class="hd bg-purple"><span class="badge">4</span>Score &amp; Verdict</div>
+      <div class="bd">
+        <ul>
+          <li>final = Σ(score·weight) / Σweight</li>
+          <li><b>≥70</b> → PASS</li>
+          <li><b>40–69</b> → WARN</li>
+          <li><b>&lt;40</b> → BLOCK</li>
+          <li>Doesn’t exist → <b>hard BLOCK</b></li>
+          <li class="small">Veto signals abstain when clean; only vote on real evidence.</li>
+        </ul>
+      </div>
+    </div>
+    <!-- 5 -->
+    <div class="card">
+      <div class="hd bg-green"><span class="badge">5</span>Enforce</div>
+      <div class="bd">
+        <b>Tier 1 proxy:</b>
+        <ul><li>annotate</li><li>block</li><li>refine (model self-corrects)</li></ul>
+        <b>Tier 2 CLI:</b>
+        <ul><li>PASS → install</li><li>WARN → prompt</li><li>BLOCK → refuse (exit 2)</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TWO-TIER EXECUTION LAYER -->
+  <div class="sec-title">Two Enforcement Surfaces</div>
+  <div class="exec">
+    <div class="tier">
+      <div class="th bg-blue">🛡️ Tier 1 — LLM Proxy (pre-emptive)</div>
+      <div class="tb">
+        Sits between the user and the model as a drop-in OpenAI endpoint. Every completion is scanned <i>before</i> it reaches the developer.
+        <div style="margin-top:8px;">
+          <span class="pill bg-green">annotate</span> tag risky packages inline
+          <span class="pill bg-gold">block</span> strip unsafe install lines
+          <span class="pill bg-blue">refine</span> ask the model to fix its own answer
+        </div>
+        <div class="flow"><span class="chip">User</span> → <span class="chip">Proxy + Guard</span> → <span class="chip">LLM</span> → <span class="chip">scan + policy</span> → <span class="chip">safe answer</span></div>
+      </div>
+    </div>
+    <div class="tier">
+      <div class="th bg-green">📦 Tier 2 — safeinstall CLI (last line)</div>
+      <div class="tb">
+        Wraps <code>pip</code> so a hallucinated name can’t be installed even if it slips past the model — the trust check runs <i>before</i> pip executes any code.
+        <div style="margin-top:8px;">
+          <span class="pill bg-green">PASS</span> install proceeds
+          <span class="pill bg-gold">WARN</span> ask the user
+          <span class="pill bg-red">BLOCK</span> refuse, exit code 2
+        </div>
+        <div class="flow"><span class="chip">safeinstall pip install X</span> → <span class="chip">trust engine</span> → <span class="chip">verdict</span> → <span class="chip">pip / stop</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEGEND + HOW IT DEFEATS SLOPSQUATTING -->
+  <div class="legend">
+    <div class="lbox">
+      <h4>Verdict Legend</h4>
+      <div class="verds">
+        <div class="verd bg-green"><b>PASS ≥ 70</b><span>Established, well-used, low-risk package</span></div>
+        <div class="verd bg-gold"><b>WARN 40–69</b><span>Plausible but thin signal — user is warned, not blocked</span></div>
+        <div class="verd bg-red"><b>BLOCK &lt; 40</b><span>Hallucinated / fresh squat / unsafe — refused</span></div>
+      </div>
+    </div>
+    <div class="lbox">
+      <h4>How this defeats slopsquatting</h4>
+      <div class="defeat">
+        <div>A fresh squat <b>exists</b> on the index, so a static allow-list waves it through.</div>
+        <div>Multi-signal trust catches low age, 0 downloads, no real repo, no usage.</div>
+        <div>Install-time scan inspects setup.py <b>without executing</b> it.</div>
+        <div>Refine loop makes the model <b>remove</b> the bad package itself.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY TAKEAWAY -->
+  <div class="takeaway">
+    <span class="star">★</span>
+    <div><b>Key Takeaway:</b> Existence is not trust. A package can be real on a live index and still be a hallucinated squat. PackageGuard replaces a static allow-list with a <b>live, multi-signal trust engine</b> enforced at two points — the LLM proxy and the install command — so unsafe packages are caught after generation and before execution.</div>
+  </div>
+
+</div>
+</body>
+</html>
